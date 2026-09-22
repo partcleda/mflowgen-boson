@@ -1,0 +1,13 @@
+mflowgen + boson
+Copyright 2025 partcl
+
+This repository is a derivative of mflowgen (https://github.com/mflowgen/mflowgen),
+which is distributed under the BSD 3-Clause License (Copyright (c) 2018, Christopher Torng;
+see LICENSE). The unmodified mflowgen files retain their original copyright.
+
+Modifications by partcl:
+  - Added steps/boson-synthesis/: an mflowgen tool that performs logic synthesis and technology
+    mapping with partcl's boson, in place of yosys / Design Compiler / Genus.
+
+"boson" is a synthesis tool from partcl (https://partcl.com). This repository invokes boson through
+its command-line/TCL interface; it does not include boson itself.

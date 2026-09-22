@@ -1,0 +1,56 @@
+#=========================================================================
+# boson Synthesis
+#=========================================================================
+# Logic synthesis and technology mapping with partcl's boson, as an mflowgen
+# tool. Reads the design RTL and the ADK standard cells, and produces a gate
+# netlist mapped to the ADK — a drop-in alternative to the yosys / DC / Genus
+# synthesis steps. boson reads its parameters from the environment, so no
+# script-generation pass is needed.
+#
+# Author : partcl
+
+name: boson-synthesis
+
+#-------------------------------------------------------------------------
+# Inputs and Outputs
+#-------------------------------------------------------------------------
+
+inputs:
+  - adk
+  - design.v
+
+outputs:
+  - design.v
+  - synth.stats.txt
+
+#-------------------------------------------------------------------------
+# Commands
+#-------------------------------------------------------------------------
+
+commands:
+  # synthesis + technology mapping with boson (parameters arrive as env vars)
+  - $boson_bin --no-color -f boson-synth.tcl 2>&1 | tee synth.log
+  # normalize the netlist for downstream P&R: escaped scalar bus ports
+  # (\name[i] ) become real vector ports (name[i]); bracketed escaped nets
+  # become bracket-free
+  - python busify.py design.boson.nl.v design.mapped.v
+  # stats
+  - grep -A20 -iE 'qor|area|instance' synth.log > synth.stats.txt || true
+  # outputs
+  - mkdir -p outputs && cd outputs
+  - ln -sf ../design.mapped.v design.v
+  - ln -sf ../synth.stats.txt synth.stats.txt
+
+#-------------------------------------------------------------------------
+# Parameters
+#-------------------------------------------------------------------------
+
+parameters:
+  design_name: undefined
+  clock_period: 2.0
+  # top-level clock port the SDC constrains
+  clock_port: clk
+  # path to (or name on $PATH of) the boson binary
+  boson_bin: boson
+  # boson compile effort
+  effort: high
