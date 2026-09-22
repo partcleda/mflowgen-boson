@@ -1,0 +1,15 @@
+cmn.showOptionPages.value = [ "Database", "Options" ]
+drc.rulesFile.value = "inputs/adk/${fill_rule_deck}"
+drc.runDir.value = "./"
+drc.layout.layoutFile.value = "inputs/design.gds"
+drc.layout.topCell.value = "${design_name}"
+drc.drcdb.resultsFormat.value = "GDSII"
+drc.drcdb.resultsFile.value = "${gds_prefix}${design_name}.gds"
+drc.drcdb.resultsCellPrefix.value = "${gds_prefix}"
+drc.drcdb.resultsCellPrefix.specified = true
+drc.reports.drcSummaryReport.value = "fill.summary"
+drc.drcMaximumResults.upperLimit.value = "MAXIMUMALL"
+cmn.turboCommand.runHow.value = "all"
+cmn.turboCommand.runHyper.value = true
+cmn.transcriptPrefs.specified = true
+cmn.transcriptPrefs.transcriptEchoFile.value = "fill.log"
