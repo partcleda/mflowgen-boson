@@ -28,17 +28,15 @@ outputs:
 #-------------------------------------------------------------------------
 
 commands:
-  # synthesis + technology mapping with boson (parameters arrive as env vars)
+  # synthesis + technology mapping with boson (parameters arrive as env vars).
+  # boson emits real Verilog vector bus ports directly (partcleda/boson#10201),
+  # so the netlist is used as-is — no port-reconstruction pass. Needs a boson with that fix.
   - $boson_bin --no-color -f boson-synth.tcl 2>&1 | tee synth.log
-  # normalize the netlist for downstream P&R: escaped scalar bus ports
-  # (\name[i] ) become real vector ports (name[i]); bracketed escaped nets
-  # become bracket-free
-  - python busify.py design.boson.nl.v design.mapped.v
   # stats
   - grep -A20 -iE 'qor|area|instance' synth.log > synth.stats.txt || true
   # outputs
   - mkdir -p outputs && cd outputs
-  - ln -sf ../design.mapped.v design.v
+  - ln -sf ../design.boson.nl.v design.v
   - ln -sf ../synth.stats.txt synth.stats.txt
 
 #-------------------------------------------------------------------------

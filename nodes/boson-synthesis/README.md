@@ -27,16 +27,15 @@ the design RTL and the ADK standard cells and produces a gate netlist mapped to 
 
 `boson-synth.tcl` reads the ADK liberty/LEF, sources `adk.tcl` for the cell names, writes a synthesis
 SDC from the parameters, runs `compile`, and writes the mapped netlist. boson reads its parameters from
-the environment (which mflowgen populates), so no script-generation pass is needed. `busify.py` then
-normalizes the netlist for downstream place-and-route: boson emits top-level bus bits as escaped scalar
-ports (`\name[i] `), which busify turns into real vector ports (`name[i]`), and bracketed escaped
-internal net names become bracket-free. Constant tie-offs are resolved to the ADK tie cells
-(`ADK_TIE_HI_CELL`/`ADK_TIE_LO_CELL`) when the ADK names them.
+the environment (which mflowgen populates), so no script-generation pass is needed. boson emits real
+Verilog vector bus ports (`input [7:0] a`) directly (partcleda/boson#10201), so the netlist is used
+as-is with no port-reconstruction pass (needs a boson carrying that fix). Constant tie-offs are resolved
+to the ADK tie cells (`ADK_TIE_HI_CELL`/`ADK_TIE_LO_CELL`) when the ADK names them.
 
 ## Status
 
 Validated against the bundled `freepdk-45nm` ADK on the `GcdUnit` demo design: boson maps the RTL to
-the ADK's cells (BUF_X1, INV_X1, DFF_X1, MUX2_X1, …) and busify normalizes the interface.
+the ADK's cells (BUF_X1, INV_X1, DFF_X1, MUX2_X1, …) with a bus-port interface.
 
 boson is a synthesis tool from partcl (https://partcl.com); this step invokes it through its
 command-line/TCL interface and does not include boson itself.
